@@ -6,8 +6,8 @@ public class PhysicsHand : MonoBehaviour
     [SerializeField] float frequency = 50f;
     [SerializeField] float damping = 1f;
     [SerializeField] float rotFrequency = 100f;
-    [SerializeField] private float rotDamping = 0.9f;
-    [SerializeField]  Transform target;
+    [SerializeField] float rotDamping = 0.9f;
+    [SerializeField] Transform target;
     [SerializeField] Rigidbody playerRigidbody;
     Rigidbody _rigidbody;
     
@@ -55,7 +55,7 @@ public class PhysicsHand : MonoBehaviour
         q.ToAngleAxis(out float angle, out Vector3 axis);
         axis.Normalize();
         axis *= Mathf.Deg2Rad;
-        Vector3 torque = ksg * axis * angle + - _rigidbody.angularVelocity * kdg;
+        Vector3 torque = ksg * axis * angle + -_rigidbody.angularVelocity * kdg;
         _rigidbody.AddTorque(torque, ForceMode.Acceleration);
     }
 }
