@@ -86,7 +86,7 @@ public class PhysicsHand : MonoBehaviour
         Vector3 handleVelocity = (target.localPosition - _previousPosition) / Time.fixedDeltaTime;
         float drag = 1 / handleVelocity.magnitude + 0.01f;
         drag = drag > 1 ? 1 : drag; // ? means to check if drag is greater than 1, if true, drag is one. Otherwise, set to drag.
-        drag = drag < 0.03f ? 0.03f : drag; // ? means to check if drag is less than 0.03f, if so, set it to 0.03, otherwise set it to drag
+        drag = drag < 0.03f ? 0.03f : drag; // ? means to check if drag is less than 0.03f, if so, set it to 0.03f, otherwise set it to drag
        
         _previousPosition = transform.position;
         return drag;
