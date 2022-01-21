@@ -7,15 +7,27 @@ public class PhysicsHand : MonoBehaviour
     [SerializeField] float damping = 1f;
     [SerializeField] float rotFrequency = 100f;
     [SerializeField] float rotDamping = 0.9f;
-    [SerializeField] Transform target;
     [SerializeField] Rigidbody playerRigidbody;
+    [SerializeField] Transform target;
+    
+    [Space]
+    [Header("Springs")]
+    [SerializeField] float climbForce = 1000f;
+    [SerializeField] float climbDrag = 500f;
+    
+    Vector3 _previousPosition;
     Rigidbody _rigidbody;
     
     void Start()
     {
+        //teleport hands to controllers
+        transform.position = target.position;
+        transform.rotation = target.rotation;
+
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.maxAngularVelocity = float.PositiveInfinity;
-        
+        _previousPosition = transform.position;
+
     }
     
     void FixedUpdate()
@@ -57,5 +69,27 @@ public class PhysicsHand : MonoBehaviour
         axis *= Mathf.Deg2Rad;
         Vector3 torque = ksg * axis * angle + -_rigidbody.angularVelocity * kdg;
         _rigidbody.AddTorque(torque, ForceMode.Acceleration);
+    }
+
+    void HookesLaw()
+    {
+        Vector3 displacementFromResting = transform.position - target.position;
+        Vector3 force = displacementFromResting * climbForce;
+        float drag = GetDrag();
+
+        playerRigidbody.AddForce(force, ForceMode.Acceleration);
+        playerRigidbody.AddForce(drag * -playerRigibody.velocity * climbDrag, ForceMode.Acceleration);
+    }
+
+    void GetDrag()
+    {
+        Vector3 handleVelocity = (target.localPosition - _previousPosition) / Time.fixedDeltaTime;
+        float drag = 1 / handleVelocity.magnitude + 0.01f;
+        drag = drag > 1 ? 1 : drag; // ? means to check if drag is greater than 1, if true, drag is one. Otherwise, set to drag.
+        drag = drag < 0.03f ? 0.03f : drag; // ? means to check if drag is less than 0.03f, if so, set it to 0.03, otherwise set it to drag
+       
+        _previousPosition = transform.position;
+        return drag;
+
     }
 }
