@@ -17,6 +17,7 @@ public class PhysicsHand : MonoBehaviour
     
     Vector3 _previousPosition;
     Rigidbody _rigidbody;
+    bool _isColliding = false;
     
     void Start()
     {
@@ -27,14 +28,13 @@ public class PhysicsHand : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.maxAngularVelocity = float.PositiveInfinity;
         _previousPosition = transform.position;
-
     }
     
     void FixedUpdate()
     {
         PIDMovement();
         PIDRotation();
-        HookesLaw();
+        if (_isColliding) HookesLaw();
     }
 
     void PIDMovement()
@@ -92,5 +92,15 @@ public class PhysicsHand : MonoBehaviour
         _previousPosition = transform.position;
         return drag;
 
+    }
+
+    void OnCollisionEnter(Collision collision) 
+    {
+        _isColliding = true; //if entering, collision is true
+    }
+
+    void onCollisionExit(Collision collision)
+    {
+        _isColliding = false; //if exiting, collision is false
     }
 }
