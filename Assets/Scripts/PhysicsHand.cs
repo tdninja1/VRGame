@@ -34,6 +34,7 @@ public class PhysicsHand : MonoBehaviour
     {
         PIDMovement();
         PIDRotation();
+        HookesLaw();
     }
 
     void PIDMovement()
@@ -78,10 +79,10 @@ public class PhysicsHand : MonoBehaviour
         float drag = GetDrag();
 
         playerRigidbody.AddForce(force, ForceMode.Acceleration);
-        playerRigidbody.AddForce(drag * -playerRigibody.velocity * climbDrag, ForceMode.Acceleration);
+        playerRigidbody.AddForce(drag * -playerRigidbody.velocity * climbDrag, ForceMode.Acceleration);
     }
 
-    void GetDrag()
+    float GetDrag()
     {
         Vector3 handleVelocity = (target.localPosition - _previousPosition) / Time.fixedDeltaTime;
         float drag = 1 / handleVelocity.magnitude + 0.01f;
