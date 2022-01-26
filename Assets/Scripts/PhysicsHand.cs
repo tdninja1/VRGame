@@ -1,6 +1,10 @@
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PhysicsHand : MonoBehaviour
+public class PhysicsHand  : MonoBehaviour
 {
     [Header("PID")]
     [SerializeField] float frequency = 50f, rotFrequency = 100f;
@@ -15,13 +19,16 @@ public class PhysicsHand : MonoBehaviour
 
     [Space]
     [Header("Grabbing")]
-    // [SerializeField] InputActionReference grabReference;
+    [SerializeField] InputActionReference grabReference; //
+    
+    [SerializeField] float distance = 0.5f;
     
     Vector3 _previousPosition;
     Rigidbody _rigidbody;
-    bool _isColliding;
+    bool _isColliding, _isAttemptingGrab;
     Collision _collision;
-
+    
+    
     void Start()
     {
         //teleport hands to controllers
@@ -33,21 +40,33 @@ public class PhysicsHand : MonoBehaviour
 
         _previousPosition = transform.position;
 
-        // grabReference.action.started += OnGrab;
-        // grabReference.action.canceled += OnRelease;
+        grabReference.action.started += OnGrab;
+        grabReference.action.canceled += OnRelease;
+
     }
 
-    // void OnDestroy()
-    // { //Undo grab reference as soon as grab reference is destroyed
-    //     grabReference.action.started -= OnGrab;
-    //     grabReference.action.canceled -= OnRelease;
-    // }
+
+    void OnDestroy()
+    { //Undo grab reference as soon as grab reference is destroyed
+        grabReference.action.started -= OnGrab;
+        grabReference.action.canceled -= OnRelease;
+    }
     
     void FixedUpdate()
     {
         PIDMovement();
         PIDRotation();
         if (_isColliding) HookesLaw();
+        DistanceCheck();
+    }
+
+    void DistanceCheck()
+    {
+        if (Math.Abs(Vector3.Distance(target.position, transform.position)) > distance)
+        {
+            transform.position = target.position;
+            transform.rotation = target.rotation;
+        }
     }
 
     void PIDMovement()
@@ -112,28 +131,41 @@ public class PhysicsHand : MonoBehaviour
         _collision = collision; //save the collision
     }
 
-    void onCollisionExit(Collision collision)
+    void onCollisionExit(Collision other)
     {
         _isColliding = false; //if exiting, collision is false
         _collision = null; //remove the collision
     }
 
-    // void OnGrab(InputAction.CallbackContext ctx) 
-    // {//if colliding with an object with a rigidbody, do something
-    //     if (_collision != null && _collision.gameObject.TryGetComponent(out Rigidbody rb)) 
-    //     {
-    //         FixedJoint joint = _rigidbody.AddComponent<FixedJoint>();
-    //         joint.connectedBody = rb;
-    //     }
-    // }
+    void OnGrab(UnityEngine.InputSystem.InputAction.CallbackContext ctx) 
+    {//if colliding with an object with a rigidbody, do something until grab is successful
+        _isAttemptingGrab = true;
+        StartCoroutine(TryGrab());
+    }
 
-    // void onRelease(InputAction.CallbackContext ctx)
-    // {
-    //     FixedJoint joint = GetComponent<FixedJoint>();
+    IEnumerator TryGrab()
+    {
+        while (_isAttemptingGrab) 
+        {
+            if (_collision != null && _collision.gameObject.TryGetComponent(out Rigidbody rb)) 
+            {
+                FixedJoint joint = _rigidbody.AddComponent<FixedJoint>();
+                joint.connectedBody = rb;
+                _isAttemptingGrab = false;
+            }
+            yield return null; //tries while loop multiple times
+        }
+    }
 
-    //     if (joint != null)
-    //     {
-    //         Destroy(joint);
-    //     }
-    // }
+    void OnRelease(UnityEngine.InputSystem.InputAction.CallbackContext ctx)
+    {
+        _isAttemptingGrab = false;
+
+        FixedJoint joint = GetComponent<FixedJoint>();
+
+        if (joint != null)
+        {
+            Destroy(joint);
+        }
+    }
 }
