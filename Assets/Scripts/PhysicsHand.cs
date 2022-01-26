@@ -3,22 +3,25 @@ using UnityEngine;
 public class PhysicsHand : MonoBehaviour
 {
     [Header("PID")]
-    [SerializeField] float frequency = 50f;
-    [SerializeField] float damping = 1f;
-    [SerializeField] float rotFrequency = 100f;
-    [SerializeField] float rotDamping = 0.9f;
+    [SerializeField] float frequency = 50f, rotFrequency = 100f;
+    [SerializeField] float damping = 1f, rotDamping = 0.9f;
     [SerializeField] Rigidbody playerRigidbody;
     [SerializeField] Transform target;
     
     [Space]
-    [Header("Springs")]
-    [SerializeField] float climbForce = 1000f;
-    [SerializeField] float climbDrag = 500f;
+    [Header("Hooke's Law")]
+    [SerializeField] float climbForce = 500f;
+    [SerializeField] float climbDrag = 250f;
+
+    [Space]
+    [Header("Grabbing")]
+    // [SerializeField] InputActionReference grabReference;
     
     Vector3 _previousPosition;
     Rigidbody _rigidbody;
-    bool _isColliding = false;
-    
+    bool _isColliding;
+    Collision _collision;
+
     void Start()
     {
         //teleport hands to controllers
@@ -27,8 +30,18 @@ public class PhysicsHand : MonoBehaviour
 
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.maxAngularVelocity = float.PositiveInfinity;
+
         _previousPosition = transform.position;
+
+        // grabReference.action.started += OnGrab;
+        // grabReference.action.canceled += OnRelease;
     }
+
+    // void OnDestroy()
+    // { //Undo grab reference as soon as grab reference is destroyed
+    //     grabReference.action.started -= OnGrab;
+    //     grabReference.action.canceled -= OnRelease;
+    // }
     
     void FixedUpdate()
     {
@@ -85,22 +98,42 @@ public class PhysicsHand : MonoBehaviour
     float GetDrag()
     {
         Vector3 handleVelocity = (target.localPosition - _previousPosition) / Time.fixedDeltaTime;
-        float drag = 1 / handleVelocity.magnitude + 0.01f;
-        drag = drag > 1 ? 1 : drag; // ? means to check if drag is greater than 1, if true, drag is one. Otherwise, set to drag.
-        drag = drag < 0.03f ? 0.03f : drag; // ? means to check if drag is less than 0.03f, if so, set it to 0.03f, otherwise set it to drag
-       
+        float drag = 1 / (handleVelocity.magnitude + 0.01f);
+        // drag = drag > 1 ? 1 : drag; // ? means to check if drag is greater than 1, if true, drag is one. Otherwise, set to drag.
+        // drag = drag < 0.03f ? 0.03f : drag; // ? means to check if drag is less than 0.03f, if so, set it to 0.03f, otherwise set it to drag
+        drag = Mathf.Clamp(drag, 0.03f, 1f); //makes sure drag is within 1f to 0.03f range
         _previousPosition = transform.position;
         return drag;
-
     }
 
     void OnCollisionEnter(Collision collision) 
     {
         _isColliding = true; //if entering, collision is true
+        _collision = collision; //save the collision
     }
 
     void onCollisionExit(Collision collision)
     {
         _isColliding = false; //if exiting, collision is false
+        _collision = null; //remove the collision
     }
+
+    // void OnGrab(InputAction.CallbackContext ctx) 
+    // {//if colliding with an object with a rigidbody, do something
+    //     if (_collision != null && _collision.gameObject.TryGetComponent(out Rigidbody rb)) 
+    //     {
+    //         FixedJoint joint = _rigidbody.AddComponent<FixedJoint>();
+    //         joint.connectedBody = rb;
+    //     }
+    // }
+
+    // void onRelease(InputAction.CallbackContext ctx)
+    // {
+    //     FixedJoint joint = GetComponent<FixedJoint>();
+
+    //     if (joint != null)
+    //     {
+    //         Destroy(joint);
+    //     }
+    // }
 }
