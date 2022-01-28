@@ -14,8 +14,8 @@ public class PhysicsHand  : MonoBehaviour
     
     [Space]
     [Header("Hooke's Law")]
-    [SerializeField] float climbForce = 1000f;
-    [SerializeField] float climbDrag = 200f;
+    [SerializeField] float climbForce = 500f;
+    [SerializeField] float climbDrag = 250f;
 
     [Space]
     [Header("Grabbing")]
