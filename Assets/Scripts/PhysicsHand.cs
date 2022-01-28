@@ -14,8 +14,8 @@ public class PhysicsHand  : MonoBehaviour
     
     [Space]
     [Header("Hooke's Law")]
-    [SerializeField] float climbForce = 500f;
-    [SerializeField] float climbDrag = 250f;
+    [SerializeField] float climbForce = 1000f;
+    [SerializeField] float climbDrag = 200f;
 
     [Space]
     [Header("Grabbing")]
@@ -131,7 +131,7 @@ public class PhysicsHand  : MonoBehaviour
         _collision = collision; //save the collision
     }
 
-    void onCollisionExit(Collision other)
+    void OnCollisionExit(Collision other)
     {
         _isColliding = false; //if exiting, collision is false
         _collision = null; //remove the collision
@@ -141,6 +141,7 @@ public class PhysicsHand  : MonoBehaviour
     {//if colliding with an object with a rigidbody, do something until grab is successful
         _isAttemptingGrab = true;
         StartCoroutine(TryGrab());
+
     }
 
     IEnumerator TryGrab()
