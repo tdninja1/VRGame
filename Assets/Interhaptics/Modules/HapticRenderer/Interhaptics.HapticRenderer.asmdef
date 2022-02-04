@@ -1,0 +1,17 @@
+{
+    "name": "Interhaptics.HapticRenderer",
+    "references": [
+        "Interhaptics.Core",
+        "UnityCoreHaptics",
+        "Unity.2D.SpriteShape.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

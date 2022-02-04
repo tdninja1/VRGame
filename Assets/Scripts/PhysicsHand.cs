@@ -45,6 +45,11 @@ public class PhysicsHand  : MonoBehaviour
 
     }
 
+    // void Update()
+    // {
+        
+    // }
+
 
     void OnDestroy()
     { //Undo grab reference as soon as grab reference is destroyed
@@ -141,6 +146,7 @@ public class PhysicsHand  : MonoBehaviour
     {//if colliding with an object with a rigidbody, do something until grab is successful
         _isAttemptingGrab = true;
         StartCoroutine(TryGrab());
+        
 
     }
 
@@ -153,6 +159,10 @@ public class PhysicsHand  : MonoBehaviour
                 FixedJoint joint = _rigidbody.AddComponent<FixedJoint>();
                 joint.connectedBody = rb;
                 _isAttemptingGrab = false;
+
+                // VibrationManager.singleton.TriggerVibration()
+
+
             }
             yield return null; //tries while loop multiple times
         }
