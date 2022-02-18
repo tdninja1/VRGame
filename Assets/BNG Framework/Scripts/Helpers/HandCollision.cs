@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BNG {
     /// <summary>
@@ -50,6 +53,10 @@ namespace BNG {
         // Colliders to keep track of
         List<Collider> handColliders;
 
+        //GORILLA UPDATES
+            //Did not always work. Pushed player back.
+        //GORILLA UPDATE
+
         void Start() {
             handColliders = new List<Collider>();
             var tempColliders = GetComponentsInChildren<Collider>(true);
@@ -60,6 +67,8 @@ namespace BNG {
                     handColliders.Add(c);
                 }
             }
+
+            
         }
 
         void Update() {
