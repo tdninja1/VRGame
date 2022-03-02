@@ -1,5 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+<<<<<<< HEAD
 VRGame.psd filter=lfs diff=lfs merge=lfs -text
 *.psd filter=lfs diff=lfs merge=lfs -text
 *.iso filter=lfs diff=lfs merge=lfs -text
+=======
+>>>>>>> parent of 7bfcb92 (Comitted gitattributes)
