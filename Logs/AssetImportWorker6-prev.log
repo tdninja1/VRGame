@@ -177,3 +177,9 @@ AssetImportParameters requested are different than current active one (requested
   custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
   custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
   custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 1012011.238071 seconds.
+  path: Assets/vr game messed up revert orig 2.unity
+  artifactKey: Guid(60ead4a4d2a02aa4ea572c6e007e19b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/vr game messed up revert orig 2.unity using Guid(60ead4a4d2a02aa4ea572c6e007e19b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '99069d44231e2fb6ea3709f95784d17e') in 2.276685 seconds 
