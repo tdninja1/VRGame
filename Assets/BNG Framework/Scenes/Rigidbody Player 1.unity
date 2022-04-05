@@ -3640,6 +3640,11 @@ PrefabInstance:
       propertyPath: playerRigidbody
       value: 
       objectReference: {fileID: 403325137}
+    - target: {fileID: 3944319607448421979, guid: 95fa1fd3c47aafe4ca02325a6550bb9c,
+        type: 3}
+      propertyPath: collisions.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4567565341130082123, guid: 95fa1fd3c47aafe4ca02325a6550bb9c,
         type: 3}
       propertyPath: target
