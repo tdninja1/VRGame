@@ -16,9 +16,49 @@ namespace BNG {
 
         protected InputBridge input;
 
+        //added for cooldown purposes
+        public float coolDownTime = 2.0f;
+        private float nextFireTime = 2.0f;
+
         protected virtual void Awake() {
             grab = GetComponent<Grabbable>();
             input = InputBridge.Instance;
+        }
+
+        //Added 
+        /// <summary>
+        /// Destroy game object during grab
+        /// </summary>
+        public virtual void DestroyLeaf() {
+           Destroy(this.gameObject);
+        }
+
+        public virtual void DestroyLeaf1() {
+            StartCoroutine(SelfDestruct());
+           
+               
+        }
+
+        IEnumerator SelfDestruct() {
+            yield return new WaitForSeconds(5f);
+            Destroy(gameObject);
+        }
+        
+        /// <summary>
+        /// Destroy game object during grab
+        /// </summary>
+        public virtual void FakeLeafCooldown() {
+           //Check if time is greater to proceed
+           if (Time.time > nextFireTime) 
+           {   //grab is being attempted
+               
+               //sets cooldown
+               print("ability used, cooldown started" );
+               nextFireTime = Time.time + coolDownTime;
+               
+           }
+           
+           
         }
 
         /// <summary>
