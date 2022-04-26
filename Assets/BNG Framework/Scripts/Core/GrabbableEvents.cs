@@ -17,8 +17,10 @@ namespace BNG {
         protected InputBridge input;
 
         //added for cooldown purposes
-        public float coolDownTime = 2.0f;
-        private float nextFireTime = 2.0f;
+        // public float coolDownTime = 2.0f;
+        // private float nextFireTime = 2.0f;
+        public AudioClip otherClip;
+        public AudioSource source;
 
         protected virtual void Awake() {
             grab = GetComponent<Grabbable>();
@@ -34,32 +36,38 @@ namespace BNG {
         }
 
         public virtual void DestroyLeaf1() {
+            //check if audio is playing, if not, play audio and start coroutine
+            if (!source.isPlaying) {
+                source.clip = otherClip;
+                source.PlayOneShot(otherClip);
+                //insert coroutine here
+
+            }
+
             StartCoroutine(SelfDestruct());
-           
-               
         }
 
         IEnumerator SelfDestruct() {
-            yield return new WaitForSeconds(5f);
-            Destroy(gameObject);
+            yield return new WaitForSeconds(3f);
+            Destroy(this.gameObject);
         }
         
         /// <summary>
         /// Destroy game object during grab
         /// </summary>
-        public virtual void FakeLeafCooldown() {
-           //Check if time is greater to proceed
-           if (Time.time > nextFireTime) 
-           {   //grab is being attempted
+        // public virtual void FakeLeafCooldown() {
+        //    //Check if time is greater to proceed
+        //    if (Time.time > nextFireTime) 
+        //    {   //grab is being attempted
                
-               //sets cooldown
-               print("ability used, cooldown started" );
-               nextFireTime = Time.time + coolDownTime;
+        //        //sets cooldown
+        //        print("ability used, cooldown started" );
+        //        nextFireTime = Time.time + coolDownTime;
                
-           }
+        //    }
            
            
-        }
+        // }
 
         /// <summary>
         /// Item has been grabbed by a Grabber
