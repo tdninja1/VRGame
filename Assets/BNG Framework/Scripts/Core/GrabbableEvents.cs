@@ -37,18 +37,27 @@ namespace BNG {
 
         public virtual void DestroyLeaf1() {
             //check if audio is playing, if not, play audio and start coroutine
-            if (!source.isPlaying) {
-                source.clip = otherClip;
-                source.PlayOneShot(otherClip);
-                //insert coroutine here
+            // if (!source.isPlaying) {
+            //     source.clip = otherClip;
+            //     source.PlayOneShot(otherClip);
+            //     //insert coroutine here
 
+            // }
+
+            AudioSource ac = GetComponent<AudioSource>();
+
+            if (ac.isPlaying)
+            {
+                return;
+            } else {
+                ac.PlayOneShot(otherClip);
             }
 
             StartCoroutine(SelfDestruct());
         }
 
         IEnumerator SelfDestruct() {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(5.5f);
             Destroy(this.gameObject);
         }
         
